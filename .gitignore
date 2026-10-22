@@ -32,9 +32,8 @@ desktop.ini
 /.nb-gradle/
 
 # --- Secrets & local env ---
-.env
-.env.*
-!.env.example
+*.env
+backend/.env
 *.pem
 *.p12
 *.jks
@@ -87,3 +86,4 @@ htmlReport/
 *.orig
 .history/
 __screenshots__/
+/backend/.env
