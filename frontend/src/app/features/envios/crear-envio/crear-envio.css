@@ -1,0 +1,9 @@
+:host { display: block; max-width: 640px; margin: 2rem auto; padding: 0 1rem; font-family: sans-serif; }
+fieldset { margin-bottom: 1.5rem; border: 1px solid #ccc; border-radius: 8px; padding: 1rem; }
+label { display: block; margin-top: .75rem; font-weight: 600; }
+input { width: 100%; padding: .5rem; box-sizing: border-box; }
+input.ng-invalid.ng-touched { border-color: #c62828; }   /* Angular marca los campos con estas clases */
+.error { color: #c62828; }
+.exito { background: #e8f5e9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+.error-servidor { background: #ffebee; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+button { padding: .75rem 1.5rem; cursor: pointer; }

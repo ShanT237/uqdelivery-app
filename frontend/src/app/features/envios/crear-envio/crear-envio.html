@@ -1,0 +1,77 @@
+<h1>Nueva solicitud de envío</h1>
+
+@if (codigoSeguimiento()) {
+  <div class="exito">
+    ¡Envío creado en estado "Creado"! Tu código de seguimiento es:
+    <strong>{{ codigoSeguimiento() }}</strong>
+  </div>
+}
+
+@if (errorServidor()) {
+  <div class="error-servidor">{{ errorServidor() }}</div>
+}
+
+<form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+
+  <fieldset formGroupName="paquete">
+    <legend>Datos del paquete</legend>
+
+    <label for="descripcion">Descripción *</label>
+    <input id="descripcion" formControlName="descripcion" />
+    @if (mensajeError('paquete.descripcion'); as msg) { <small class="error">{{ msg }}</small> }
+
+    <label for="peso">Peso (kg) *</label>
+    <input id="peso" type="number" step="0.1" formControlName="pesoKg" />
+    @if (mensajeError('paquete.pesoKg'); as msg) { <small class="error">{{ msg }}</small> }
+  </fieldset>
+
+  <fieldset formGroupName="origen">
+    <legend>Dirección de origen</legend>
+
+    <label for="o-calle">Calle *</label>
+    <input id="o-calle" formControlName="calle" />
+    @if (mensajeError('origen.calle'); as msg) { <small class="error">{{ msg }}</small> }
+
+    <label for="o-ciudad">Ciudad *</label>
+    <input id="o-ciudad" formControlName="ciudad" />
+    @if (mensajeError('origen.ciudad'); as msg) { <small class="error">{{ msg }}</small> }
+
+    <label for="o-ref">Referencia</label>
+    <input id="o-ref" formControlName="referencia" />
+  </fieldset>
+
+  <fieldset formGroupName="destino">
+    <legend>Dirección de destino</legend>
+
+    <label for="d-calle">Calle *</label>
+    <input id="d-calle" formControlName="calle" />
+    @if (mensajeError('destino.calle'); as msg) { <small class="error">{{ msg }}</small> }
+
+    <label for="d-ciudad">Ciudad *</label>
+    <input id="d-ciudad" formControlName="ciudad" />
+    @if (mensajeError('destino.ciudad'); as msg) { <small class="error">{{ msg }}</small> }
+
+    <label for="d-ref">Referencia</label>
+    <input id="d-ref" formControlName="referencia" />
+  </fieldset>
+
+  <fieldset formGroupName="receptor">
+    <legend>Datos del receptor</legend>
+
+    <label for="r-nombre">Nombre *</label>
+    <input id="r-nombre" formControlName="nombre" />
+    @if (mensajeError('receptor.nombre'); as msg) { <small class="error">{{ msg }}</small> }
+
+    <label for="r-tel">Teléfono *</label>
+    <input id="r-tel" formControlName="telefono" />
+    @if (mensajeError('receptor.telefono'); as msg) { <small class="error">{{ msg }}</small> }
+
+    <label for="r-email">Correo (opcional)</label>
+    <input id="r-email" formControlName="email" />
+    @if (mensajeError('receptor.email'); as msg) { <small class="error">{{ msg }}</small> }
+  </fieldset>
+
+  <button type="submit" [disabled]="enviando()">
+    {{ enviando() ? 'Enviando...' : 'Solicitar envío' }}
+  </button>
+</form>
