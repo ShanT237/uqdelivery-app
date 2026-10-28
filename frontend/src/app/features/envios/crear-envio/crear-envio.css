@@ -1,0 +1,133 @@
+:host {
+  display: block;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+/* ---------- Cabecera con logo ---------- */
+.cabecera { text-align: center; margin-bottom: 2rem; }
+
+.logo-wrap {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  overflow: hidden;                       /* recorta el fondo de madera de la imagen */
+  box-shadow: 0 0 0 3px var(--uq-dorado), 0 8px 24px rgba(0, 0, 0, .5);
+}
+.logo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;                      /* toma el centro de la imagen */
+  transform: scale(1.1);                  /* ajusta entre 1.0 y 1.2 si se corta o sobra madera */
+}
+
+h1 {
+  font-family: var(--fuente-titulo);
+  font-weight: 400;
+  font-size: 1.8rem;
+  color: var(--uq-dorado);
+  margin: 0 0 .25rem;
+  text-shadow: 2px 2px 0 var(--uq-rojo-oscuro);
+}
+.cabecera p { margin: 0; opacity: .8; font-size: .9rem; }
+
+/* ---------- Secciones del formulario ---------- */
+fieldset {
+  background: rgba(0, 0, 0, .25);
+  border: 2px solid var(--uq-dorado);
+  border-radius: 14px;
+  padding: 1rem 1.25rem 1.25rem;
+  margin: 0 0 1.5rem;
+}
+legend {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-size: .85rem;
+  color: var(--uq-madera);
+  background: var(--uq-dorado);
+  padding: .25rem .9rem;
+  border-radius: 999px;
+}
+
+/* ---------- Campos ---------- */
+label {
+  display: block;
+  margin-top: .9rem;
+  font-weight: 600;
+  font-size: .9rem;
+  color: var(--uq-dorado);
+}
+input {
+  width: 100%;
+  margin-top: .3rem;
+  padding: .65rem .8rem;
+  font: inherit;
+  color: var(--uq-madera);
+  background: var(--uq-crema);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  transition: border-color .15s, box-shadow .15s;
+}
+input:focus {
+  outline: none;
+  border-color: var(--uq-dorado);
+  box-shadow: 0 0 0 3px rgba(242, 185, 29, .35);
+}
+/* Angular agrega estas clases automáticamente según la validación */
+input.ng-invalid.ng-touched {
+  border-color: var(--uq-error);
+}
+
+/* ---------- Mensajes ---------- */
+.error {
+  display: block;
+  margin-top: .3rem;
+  color: var(--uq-error);
+  font-size: .8rem;
+  font-weight: 600;
+}
+.exito, .error-servidor {
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+.exito {
+  background: rgba(242, 185, 29, .15);
+  border: 2px solid var(--uq-dorado);
+}
+.exito strong {
+  display: block;
+  margin-top: .4rem;
+  font-family: var(--fuente-titulo);
+  font-weight: 400;
+  font-size: 1.5rem;
+  letter-spacing: .08em;
+  color: var(--uq-dorado);
+}
+.error-servidor {
+  background: rgba(200, 49, 43, .25);
+  border: 2px solid var(--uq-rojo);
+}
+
+/* ---------- Botón ---------- */
+button[type='submit'] {
+  width: 100%;
+  padding: .9rem 1.5rem;
+  font-family: var(--fuente-titulo);
+  font-size: 1.1rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--uq-dorado);
+  background: var(--uq-rojo);
+  border: 3px solid var(--uq-dorado);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+}
+button[type='submit']:hover:not(:disabled) { background: var(--uq-rojo-oscuro); }
+button[type='submit']:active:not(:disabled) { transform: scale(.98); }
+button[type='submit']:disabled { opacity: .6; cursor: wait; }
