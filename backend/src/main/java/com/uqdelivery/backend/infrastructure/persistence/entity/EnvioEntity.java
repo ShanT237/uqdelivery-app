@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 /**
  * Entidad JPA para la tabla 'envios' en PostgreSQL.
- * Posee relación con la entidad PaqueteEntity.
+ * Posee relación con la entidad PaqueteEntity y con UserEntity (emisor).
  */
 @Entity
 @Table(name = "envios")
@@ -30,6 +31,11 @@ public class EnvioEntity {
 
     @Column(nullable = false, unique = true)
     private String codigoSeguimiento;
+
+    // ─── Relación con Usuario Emisor (Nullable según requerimiento) ───────────
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emisor_id", nullable = true)
+    private UserEntity emisor;
 
     // ─── Relación con Entidad Paquete ─────────────────────────────────────────
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -85,6 +91,9 @@ public class EnvioEntity {
 
     public String getCodigoSeguimiento() { return codigoSeguimiento; }
     public void setCodigoSeguimiento(String codigoSeguimiento) { this.codigoSeguimiento = codigoSeguimiento; }
+
+    public UserEntity getEmisor() { return emisor; }
+    public void setEmisor(UserEntity emisor) { this.emisor = emisor; }
 
     public PaqueteEntity getPaquete() { return paquete; }
     public void setPaquete(PaqueteEntity paquete) { this.paquete = paquete; }

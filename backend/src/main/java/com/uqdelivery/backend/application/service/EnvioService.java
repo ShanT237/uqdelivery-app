@@ -7,8 +7,10 @@ import com.uqdelivery.backend.domain.model.Envio;
 import com.uqdelivery.backend.domain.model.EstadoEnvio;
 import com.uqdelivery.backend.domain.model.Paquete;
 import com.uqdelivery.backend.domain.model.Receptor;
+import com.uqdelivery.backend.domain.model.User;
 import com.uqdelivery.backend.domain.port.in.CrearEnvioUseCase;
 import com.uqdelivery.backend.domain.port.out.EnvioRepositoryPort;
+import com.uqdelivery.backend.domain.port.out.UserRepositoryPort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,17 +23,26 @@ import java.util.UUID;
 public class EnvioService implements CrearEnvioUseCase {
 
     private final EnvioRepositoryPort envioRepository;
+    private final UserRepositoryPort userRepository;
 
-    public EnvioService(EnvioRepositoryPort envioRepository) {
+    public EnvioService(EnvioRepositoryPort envioRepository, UserRepositoryPort userRepository) {
         this.envioRepository = envioRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public EnvioResponseDto crear(CrearEnvioRequestDto request) {
-        // 1. Generación de código único de seguimiento (formato UQD-XXXXXXXX)
+    public EnvioResponseDto crear(CrearEnvioRequestDto request, String emailUsuario) {
+        // 1. Obtener usuario emisor por email
+        User emisor = null;
+        if (emailUsuario != null && !emailUsuario.isBlank()) {
+            emisor = userRepository.findByEmail(emailUsuario)
+                    .orElseThrow(() -> new IllegalStateException("Usuario no encontrado con el email: " + emailUsuario));
+        }
+
+        // 2. Generación de código único de seguimiento (formato UQD-XXXXXXXX)
         String codigoSeguimiento = "UQD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
-        // 2. Mapeo del DTO al modelo de dominio puro
+        // 3. Mapeo del DTO al modelo de dominio puro
         Paquete paquete = new Paquete(
                 request.getPaquete().getDescripcion(),
                 request.getPaquete().getPesoKg()
@@ -58,6 +69,7 @@ public class EnvioService implements CrearEnvioUseCase {
         Envio envio = new Envio(
                 UUID.randomUUID(),
                 codigoSeguimiento,
+                emisor != null ? emisor.getEmail() : null,
                 paquete,
                 origen,
                 destino,
@@ -66,10 +78,10 @@ public class EnvioService implements CrearEnvioUseCase {
                 LocalDateTime.now()
         );
 
-        // 3. Guardado a través del puerto de persistencia
+        // 4. Guardado a través del puerto de persistencia
         Envio guardado = envioRepository.save(envio);
 
-        // 4. Retorno del DTO de respuesta
+        // 5. Retorno del DTO de respuesta
         return new EnvioResponseDto(
                 guardado.getId().toString(),
                 guardado.getCodigoSeguimiento(),

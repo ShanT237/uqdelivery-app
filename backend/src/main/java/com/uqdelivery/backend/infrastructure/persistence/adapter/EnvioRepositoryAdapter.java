@@ -9,6 +9,7 @@ import com.uqdelivery.backend.domain.port.out.EnvioRepositoryPort;
 import com.uqdelivery.backend.infrastructure.persistence.entity.EnvioEntity;
 import com.uqdelivery.backend.infrastructure.persistence.entity.PaqueteEntity;
 import com.uqdelivery.backend.infrastructure.persistence.repository.EnvioJpaRepository;
+import com.uqdelivery.backend.infrastructure.persistence.repository.UserJpaRepository;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,9 +19,11 @@ import org.springframework.stereotype.Component;
 public class EnvioRepositoryAdapter implements EnvioRepositoryPort {
 
     private final EnvioJpaRepository envioJpaRepository;
+    private final UserJpaRepository userJpaRepository;
 
-    public EnvioRepositoryAdapter(EnvioJpaRepository envioJpaRepository) {
+    public EnvioRepositoryAdapter(EnvioJpaRepository envioJpaRepository, UserJpaRepository userJpaRepository) {
         this.envioJpaRepository = envioJpaRepository;
+        this.userJpaRepository = userJpaRepository;
     }
 
     @Override
@@ -34,6 +37,12 @@ public class EnvioRepositoryAdapter implements EnvioRepositoryPort {
         EnvioEntity entity = new EnvioEntity();
         entity.setId(envio.getId());
         entity.setCodigoSeguimiento(envio.getCodigoSeguimiento());
+
+        // Asociar emisor_id si existe
+        if (envio.getEmisorEmail() != null && !envio.getEmisorEmail().isBlank()) {
+            userJpaRepository.findByEmail(envio.getEmisorEmail())
+                    .ifPresent(entity::setEmisor);
+        }
 
         // Mapeo a PaqueteEntity
         PaqueteEntity paqueteEntity = new PaqueteEntity(
@@ -57,9 +66,11 @@ public class EnvioRepositoryAdapter implements EnvioRepositoryPort {
     }
 
     private Envio toDomain(EnvioEntity entity) {
+        String emisorEmail = entity.getEmisor() != null ? entity.getEmisor().getEmail() : null;
         return new Envio(
                 entity.getId(),
                 entity.getCodigoSeguimiento(),
+                emisorEmail,
                 new Paquete(entity.getPaquete().getDescripcion(), entity.getPaquete().getPesoKg()),
                 new Direccion(entity.getOrigenCalle(), entity.getOrigenCiudad(), entity.getOrigenReferencia()),
                 new Direccion(entity.getDestinoCalle(), entity.getDestinoCiudad(), entity.getDestinoReferencia()),

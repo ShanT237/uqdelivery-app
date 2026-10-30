@@ -8,5 +8,5 @@ import com.uqdelivery.backend.application.dto.EnvioResponseDto;
  */
 public interface CrearEnvioUseCase {
 
-    EnvioResponseDto crear(CrearEnvioRequestDto request);
+    EnvioResponseDto crear(CrearEnvioRequestDto request, String emailUsuario);
 }

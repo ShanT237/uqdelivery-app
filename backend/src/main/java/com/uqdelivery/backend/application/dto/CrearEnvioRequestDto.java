@@ -80,11 +80,14 @@ public class CrearEnvioRequestDto {
 
     public static class DireccionDto {
         @NotBlank(message = "La calle es obligatoria")
+        @Size(max = 255, message = "La calle no debe superar 255 caracteres")
         private String calle;
 
         @NotBlank(message = "La ciudad es obligatoria")
+        @Size(max = 255, message = "La ciudad no debe superar 255 caracteres")
         private String ciudad;
 
+        @Size(max = 255, message = "La referencia no debe superar 255 caracteres")
         private String referencia;
 
         public DireccionDto() {}
@@ -107,12 +110,14 @@ public class CrearEnvioRequestDto {
 
     public static class ReceptorDto {
         @NotBlank(message = "El nombre del receptor es obligatorio")
+        @Size(max = 255, message = "El nombre del receptor no debe superar 255 caracteres")
         private String nombre;
 
         @NotBlank(message = "El teléfono del receptor es obligatorio")
         @Pattern(regexp = "^\\d{7,10}$", message = "El teléfono debe tener entre 7 y 10 dígitos")
         private String telefono;
 
+        @Size(max = 255, message = "El correo electrónico no debe superar 255 caracteres")
         @Email(message = "El correo electrónico no es válido")
         private String email;
 
