@@ -11,5 +11,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/envios/crear-envio/crear-envio').then(m => m.CrearEnvio)
   },
-  { path: '', redirectTo: 'envios/nuevo', pathMatch: 'full' }
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login' }
 ];
