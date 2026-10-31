@@ -1,5 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 import { EnvioService } from '../../../core/services/envio.service';
 import { CrearEnvioRequest } from '../../../core/models/envio.model';
 
@@ -12,7 +14,10 @@ import { CrearEnvioRequest } from '../../../core/models/envio.model';
 export class CrearEnvio {
   private fb = inject(NonNullableFormBuilder);
   private envioService = inject(EnvioService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
+  usuario = this.authService.usuario;
   enviando = signal(false);
   errorServidor = signal<string | null>(null);
   codigoSeguimiento = signal<string | null>(null);
@@ -52,6 +57,11 @@ export class CrearEnvio {
     if (c.hasError('max')) return 'El valor es demasiado alto';
     if (c.hasError('maxlength')) return 'Texto demasiado largo';
     return 'Valor no válido';
+  }
+
+  cerrarSesion(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   enviar(): void {

@@ -1,3 +1,10 @@
+<nav class="barra-sesion">
+  <span class="saludo">
+    Hola, <strong>{{ usuario()?.fullName }}</strong>
+  </span>
+  <button type="button" class="cerrar-sesion" (click)="cerrarSesion()">Cerrar sesión</button>
+</nav>
+
 <header class="cabecera">
   <div class="logo-wrap">
     <img src="logo-uqdelivery.png" alt="Logo UQDelivery" />

@@ -5,6 +5,43 @@
   padding: 2rem 1rem 3rem;
 }
 
+/* ---------- Barra de sesión ---------- */
+.barra-sesion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: .9rem;
+}
+.saludo {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.saludo strong { color: var(--uq-dorado); }
+
+.cerrar-sesion {
+  flex-shrink: 0;
+  padding: .45rem 1rem;
+  font: inherit;
+  font-weight: 800;
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--uq-dorado);
+  background: transparent;
+  border: 2px solid var(--uq-dorado);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.cerrar-sesion:hover {
+  color: var(--uq-madera);
+  background: var(--uq-dorado);
+}
+
 /* ---------- Cabecera con logo ---------- */
 .cabecera { text-align: center; margin-bottom: 2rem; }
 
