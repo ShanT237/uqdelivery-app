@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -8,6 +9,7 @@ export const routes: Routes = [
   },
   {
     path: 'envios/nuevo',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/envios/crear-envio/crear-envio').then(m => m.CrearEnvio)
   },

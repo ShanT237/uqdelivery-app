@@ -32,6 +32,18 @@ export class AuthService {
     return this.usuario()?.token ?? null;
   }
 
+  // true si hay token y aún no ha vencido (el backend lo emite con "exp" en segundos)
+  sesionActiva(): boolean {
+    const token = this.token;
+    if (!token) return false;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+      return typeof payload.exp !== 'number' || payload.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
+  }
+
   private guardarSesion(resp: AuthResponse): void {
     localStorage.setItem(CLAVE_SESION, JSON.stringify(resp));
     this.usuario.set(resp);
