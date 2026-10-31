@@ -2,13 +2,14 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse, LoginRequest, RegistroRequest } from '../models/auth.model';
+import { API_URL } from '../config/api.config';
 
 const CLAVE_SESION = 'uq-sesion';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/v1/auth';
+  private apiUrl = `${API_URL}/auth`;
 
   // Usuario con sesión activa (null si no ha iniciado sesión)
   usuario = signal<AuthResponse | null>(this.leerSesion());
