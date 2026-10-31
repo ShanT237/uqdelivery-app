@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { EnvioService } from '../../../core/services/envio.service';
 import { CrearEnvioRequest } from '../../../core/models/envio.model';
+import { noVacio } from '../../../shared/validators/no-vacio.validator';
 
 @Component({
   selector: 'app-crear-envio',
@@ -25,22 +26,22 @@ export class CrearEnvio {
   // La estructura del formulario y sus reglas de validación
   form = this.fb.group({
     paquete: this.fb.group({
-      descripcion: ['', [Validators.required, Validators.maxLength(200)]],
+      descripcion: ['', [noVacio, Validators.maxLength(200)]],
       pesoKg: this.fb.control<number | null>(null,
         [Validators.required, Validators.min(0.1), Validators.max(50)])
     }),
     origen: this.fb.group({
-      calle: ['', Validators.required],
-      ciudad: ['', Validators.required],
+      calle: ['', noVacio],
+      ciudad: ['', noVacio],
       referencia: ['']
     }),
     destino: this.fb.group({
-      calle: ['', Validators.required],
-      ciudad: ['', Validators.required],
+      calle: ['', noVacio],
+      ciudad: ['', noVacio],
       referencia: ['']
     }),
     receptor: this.fb.group({
-      nombre: ['', Validators.required],
+      nombre: ['', noVacio],
       telefono: ['', [Validators.required, Validators.pattern(/^\d{7,10}$/)]],
       email: ['', Validators.email]
     })

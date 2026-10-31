@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { AuthResponse } from '../../../core/models/auth.model';
+import { noVacio } from '../../../shared/validators/no-vacio.validator';
 
 type Modo = 'login' | 'registro';
 
@@ -31,15 +32,15 @@ export class Login {
 
   // Mismas reglas que LoginRequestDto en el backend
   loginForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required]
+    email: ['', [noVacio, Validators.email]],
+    password: ['', noVacio]
   });
 
   // Mismas reglas que RegisterRequestDto en el backend
   registroForm = this.fb.group({
-    fullName: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]]
+    fullName: ['', noVacio],
+    email: ['', [noVacio, Validators.email]],
+    password: ['', [noVacio, Validators.minLength(8)]]
   });
 
   cambiarModo(modo: Modo): void {

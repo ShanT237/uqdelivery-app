@@ -122,6 +122,16 @@ describe('Login', () => {
       httpMock.expectNone(`${API_AUTH}/register`);
     });
 
+    it('rechaza un nombre o contraseña de solo espacios sin llamar al servidor', async () => {
+      await crear();
+      component.registroForm.setValue({ fullName: '     ', email: 'ana@uq.com', password: '          ' });
+      component.registrarse();
+
+      httpMock.expectNone(`${API_AUTH}/register`);
+      expect(component.mensajeError('registro', 'fullName')).toBe('Este campo es obligatorio');
+      expect(component.mensajeError('registro', 'password')).toBe('Este campo es obligatorio');
+    });
+
     it('con datos válidos crea la cuenta y lleva a /envios/nuevo', async () => {
       await crear();
       component.registroForm.setValue({ fullName: 'Ana Pérez', email: 'ana@uq.com', password: 'clave12345' });

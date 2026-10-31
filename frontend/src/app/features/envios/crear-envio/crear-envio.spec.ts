@@ -50,6 +50,17 @@ describe('CrearEnvio', () => {
     expect(component.mensajeError('paquete.descripcion')).toBe('Este campo es obligatorio');
   });
 
+  it('rechaza campos obligatorios de solo espacios sin llamar al servidor', () => {
+    llenarFormularioValido();
+    component.form.get('receptor.nombre')!.setValue('   ');
+    component.form.get('destino.ciudad')!.setValue('   ');
+    component.enviar();
+
+    httpMock.expectNone(API_ENVIOS);
+    expect(component.mensajeError('receptor.nombre')).toBe('Este campo es obligatorio');
+    expect(component.mensajeError('destino.ciudad')).toBe('Este campo es obligatorio');
+  });
+
   it('valida el formato del teléfono del receptor', () => {
     const telefono = component.form.get('receptor.telefono')!;
     telefono.setValue('12ab');
