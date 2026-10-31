@@ -129,6 +129,16 @@ input.ng-invalid.ng-touched {
 .error { color: var(--uq-error); }
 .ayuda { opacity: .65; }
 
+.aviso {
+  margin: 1rem 0 0;
+  padding: .75rem 1rem;
+  font-size: .85rem;
+  font-weight: 600;
+  background: rgba(242, 185, 29, .15);
+  border: 2px solid var(--uq-dorado);
+  border-radius: 10px;
+}
+
 .error-servidor {
   margin: 1rem 0 0;
   padding: .75rem 1rem;

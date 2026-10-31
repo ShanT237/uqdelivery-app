@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { AuthResponse } from '../../../core/models/auth.model';
@@ -23,6 +23,11 @@ export class Login {
   verPassword = signal(false);
   enviando = signal(false);
   errorServidor = signal<string | null>(null);
+
+  // El interceptor redirige con ?sesion=expirada cuando el backend rechaza el token
+  sesionExpirada = signal(
+    inject(ActivatedRoute).snapshot.queryParamMap.get('sesion') === 'expirada'
+  );
 
   // Mismas reglas que LoginRequestDto en el backend
   loginForm = this.fb.group({
@@ -73,6 +78,7 @@ export class Login {
   private enviar(peticion: Observable<AuthResponse>): void {
     this.enviando.set(true);
     this.errorServidor.set(null);
+    this.sesionExpirada.set(false);
 
     peticion.subscribe({
       next: () => {

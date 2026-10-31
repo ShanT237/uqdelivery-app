@@ -18,6 +18,10 @@
     </button>
   </div>
 
+  @if (sesionExpirada()) {
+    <div class="aviso" role="status">Tu sesión expiró. Inicia sesión de nuevo para continuar.</div>
+  }
+
   @if (errorServidor()) {
     <div class="error-servidor" role="alert">{{ errorServidor() }}</div>
   }
