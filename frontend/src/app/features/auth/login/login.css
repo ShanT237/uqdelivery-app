@@ -1,0 +1,188 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.tarjeta {
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem 1.75rem 1.5rem;
+  background: rgba(0, 0, 0, .25);
+  border: 2px solid var(--uq-dorado);
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .45);
+}
+
+/* ---------- Cabecera con logo ---------- */
+.cabecera { text-align: center; margin-bottom: 1.5rem; }
+
+.logo-wrap {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  overflow: hidden;                       /* recorta el fondo de madera de la imagen */
+  box-shadow: 0 0 0 3px var(--uq-dorado), 0 8px 24px rgba(0, 0, 0, .5);
+}
+.logo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.1);
+}
+
+h1 {
+  font-family: var(--fuente-titulo);
+  font-weight: 400;
+  font-size: 1.8rem;
+  color: var(--uq-dorado);
+  margin: 0 0 .25rem;
+  text-shadow: 2px 2px 0 var(--uq-rojo-oscuro);
+}
+.cabecera p { margin: 0; opacity: .8; font-size: .9rem; }
+
+/* ---------- Pestañas login / registro ---------- */
+.pestanas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .25rem;
+  padding: .25rem;
+  margin-bottom: .5rem;
+  background: rgba(0, 0, 0, .3);
+  border: 2px solid var(--uq-dorado);
+  border-radius: 999px;
+}
+.pestanas button {
+  padding: .5rem;
+  font: inherit;
+  font-weight: 800;
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--uq-crema);
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.pestanas button.activa {
+  color: var(--uq-madera);
+  background: var(--uq-dorado);
+}
+
+/* ---------- Campos ---------- */
+label {
+  display: block;
+  margin-top: .9rem;
+  font-weight: 600;
+  font-size: .9rem;
+  color: var(--uq-dorado);
+}
+input {
+  width: 100%;
+  margin-top: .3rem;
+  padding: .65rem .8rem;
+  font: inherit;
+  color: var(--uq-madera);
+  background: var(--uq-crema);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  transition: border-color .15s, box-shadow .15s;
+}
+input:focus {
+  outline: none;
+  border-color: var(--uq-dorado);
+  box-shadow: 0 0 0 3px rgba(242, 185, 29, .35);
+}
+input.ng-invalid.ng-touched {
+  border-color: var(--uq-error);
+}
+
+.campo-password { position: relative; }
+.campo-password input { padding-right: 5rem; }
+.ver {
+  position: absolute;
+  top: 50%;
+  right: .5rem;
+  transform: translateY(calc(-50% + .15rem));
+  padding: .25rem .6rem;
+  font: inherit;
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--uq-rojo);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* ---------- Mensajes ---------- */
+.error, .ayuda {
+  display: block;
+  margin-top: .3rem;
+  font-size: .8rem;
+  font-weight: 600;
+}
+.error { color: var(--uq-error); }
+.ayuda { opacity: .65; }
+
+.aviso {
+  margin: 1rem 0 0;
+  padding: .75rem 1rem;
+  font-size: .85rem;
+  font-weight: 600;
+  background: rgba(242, 185, 29, .15);
+  border: 2px solid var(--uq-dorado);
+  border-radius: 10px;
+}
+
+.error-servidor {
+  margin: 1rem 0 0;
+  padding: .75rem 1rem;
+  font-size: .85rem;
+  font-weight: 600;
+  background: rgba(200, 49, 43, .25);
+  border: 2px solid var(--uq-rojo);
+  border-radius: 10px;
+}
+
+/* ---------- Botón principal ---------- */
+.principal {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: .9rem 1.5rem;
+  font-family: var(--fuente-titulo);
+  font-size: 1.1rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--uq-dorado);
+  background: var(--uq-rojo);
+  border: 3px solid var(--uq-dorado);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+}
+.principal:hover:not(:disabled) { background: var(--uq-rojo-oscuro); }
+.principal:active:not(:disabled) { transform: scale(.98); }
+.principal:disabled { opacity: .6; cursor: wait; }
+
+/* ---------- Enlace alterno ---------- */
+.alterno {
+  margin: 1.25rem 0 0;
+  text-align: center;
+  font-size: .85rem;
+  opacity: .9;
+}
+.enlace {
+  padding: 0;
+  font: inherit;
+  font-weight: 800;
+  color: var(--uq-dorado);
+  background: none;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+}

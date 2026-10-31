@@ -1,0 +1,86 @@
+<div class="tarjeta">
+  <header class="cabecera">
+    <div class="logo-wrap">
+      <img src="logo-uqdelivery.png" alt="Logo UQDelivery" />
+    </div>
+    <h1>{{ modo() === 'login' ? 'Bienvenido' : 'Crea tu cuenta' }}</h1>
+    <p>{{ modo() === 'login' ? 'Ingresa para gestionar tus envíos' : 'Regístrate para empezar a enviar' }}</p>
+  </header>
+
+  <div class="pestanas" role="tablist">
+    <button type="button" role="tab" [class.activa]="modo() === 'login'"
+            [attr.aria-selected]="modo() === 'login'" (click)="cambiarModo('login')">
+      Iniciar sesión
+    </button>
+    <button type="button" role="tab" [class.activa]="modo() === 'registro'"
+            [attr.aria-selected]="modo() === 'registro'" (click)="cambiarModo('registro')">
+      Registrarse
+    </button>
+  </div>
+
+  @if (sesionExpirada()) {
+    <div class="aviso" role="status">Tu sesión expiró. Inicia sesión de nuevo para continuar.</div>
+  }
+
+  @if (errorServidor()) {
+    <div class="error-servidor" role="alert">{{ errorServidor() }}</div>
+  }
+
+  @if (modo() === 'login') {
+    <form [formGroup]="loginForm" (ngSubmit)="iniciarSesion()" novalidate>
+      <label for="l-email">Correo electrónico</label>
+      <input id="l-email" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" formControlName="email" />
+      @if (mensajeError('login', 'email'); as msg) { <small class="error">{{ msg }}</small> }
+
+      <label for="l-pass">Contraseña</label>
+      <div class="campo-password">
+        <input id="l-pass" [type]="verPassword() ? 'text' : 'password'" autocomplete="current-password" formControlName="password" />
+        <button type="button" class="ver" (click)="verPassword.set(!verPassword())">
+          {{ verPassword() ? 'Ocultar' : 'Ver' }}
+        </button>
+      </div>
+      @if (mensajeError('login', 'password'); as msg) { <small class="error">{{ msg }}</small> }
+
+      <button type="submit" class="principal" [disabled]="enviando()">
+        {{ enviando() ? 'Ingresando...' : 'Ingresar' }}
+      </button>
+    </form>
+
+    <p class="alterno">
+      ¿No tienes cuenta?
+      <button type="button" class="enlace" (click)="cambiarModo('registro')">Regístrate</button>
+    </p>
+  } @else {
+    <form [formGroup]="registroForm" (ngSubmit)="registrarse()" novalidate>
+      <label for="r-nombre">Nombre completo</label>
+      <input id="r-nombre" autocomplete="name" formControlName="fullName" />
+      @if (mensajeError('registro', 'fullName'); as msg) { <small class="error">{{ msg }}</small> }
+
+      <label for="r-email">Correo electrónico</label>
+      <input id="r-email" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" formControlName="email" />
+      @if (mensajeError('registro', 'email'); as msg) { <small class="error">{{ msg }}</small> }
+
+      <label for="r-pass">Contraseña</label>
+      <div class="campo-password">
+        <input id="r-pass" [type]="verPassword() ? 'text' : 'password'" autocomplete="new-password" formControlName="password" />
+        <button type="button" class="ver" (click)="verPassword.set(!verPassword())">
+          {{ verPassword() ? 'Ocultar' : 'Ver' }}
+        </button>
+      </div>
+      @if (mensajeError('registro', 'password'); as msg) {
+        <small class="error">{{ msg }}</small>
+      } @else {
+        <small class="ayuda">Mínimo 8 caracteres</small>
+      }
+
+      <button type="submit" class="principal" [disabled]="enviando()">
+        {{ enviando() ? 'Creando cuenta...' : 'Crear cuenta' }}
+      </button>
+    </form>
+
+    <p class="alterno">
+      ¿Ya tienes cuenta?
+      <button type="button" class="enlace" (click)="cambiarModo('login')">Inicia sesión</button>
+    </p>
+  }
+</div>

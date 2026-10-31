@@ -53,8 +53,9 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
                 .findByName(user.getRole().name())
                 .orElseGet(() -> roleJpaRepository.save(new RoleEntity(user.getRole().name())));
 
+        // El id no se asigna: UserEntity usa @GeneratedValue y Hibernate lo genera al guardar.
+        // Si se asigna a mano, save() hace merge, no encuentra la fila y falla con 500.
         UserEntity entity = new UserEntity();
-        entity.setId(user.getId());
         entity.setFullName(user.getFullName());
         entity.setEmail(user.getEmail());
         entity.setPassword(user.getPassword());
