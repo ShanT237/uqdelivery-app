@@ -11,6 +11,7 @@ import com.uqdelivery.backend.domain.model.User;
 import com.uqdelivery.backend.domain.port.in.CrearEnvioUseCase;
 import com.uqdelivery.backend.domain.port.out.EnvioRepositoryPort;
 import com.uqdelivery.backend.domain.port.out.UserRepositoryPort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,12 +33,11 @@ public class EnvioService implements CrearEnvioUseCase {
 
     @Override
     public EnvioResponseDto crear(CrearEnvioRequestDto request, String emailUsuario) {
-        // 1. Obtener usuario emisor por email
-        User emisor = null;
-        if (emailUsuario != null && !emailUsuario.isBlank()) {
-            emisor = userRepository.findByEmail(emailUsuario)
-                    .orElseThrow(() -> new IllegalStateException("Usuario no encontrado con el email: " + emailUsuario));
+        if (emailUsuario == null || emailUsuario.isBlank()) {
+            throw new UsernameNotFoundException("No se recibió el usuario autenticado");
         }
+        User emisor = userRepository.findByEmail(emailUsuario)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con el email: " + emailUsuario));
 
         // 2. Generación de código único de seguimiento (formato UQD-XXXXXXXX)
         String codigoSeguimiento = "UQD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
@@ -69,7 +69,7 @@ public class EnvioService implements CrearEnvioUseCase {
         Envio envio = new Envio(
                 UUID.randomUUID(),
                 codigoSeguimiento,
-                emisor != null ? emisor.getEmail() : null,
+                emisor.getEmail(),
                 paquete,
                 origen,
                 destino,

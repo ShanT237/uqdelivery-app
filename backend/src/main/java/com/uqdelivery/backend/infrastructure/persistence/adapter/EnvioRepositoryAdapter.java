@@ -35,7 +35,6 @@ public class EnvioRepositoryAdapter implements EnvioRepositoryPort {
 
     private EnvioEntity toEntity(Envio envio) {
         EnvioEntity entity = new EnvioEntity();
-        entity.setId(envio.getId());
         entity.setCodigoSeguimiento(envio.getCodigoSeguimiento());
 
         // Asociar emisor_id si existe

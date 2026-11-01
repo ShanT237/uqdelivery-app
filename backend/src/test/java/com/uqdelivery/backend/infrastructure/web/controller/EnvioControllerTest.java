@@ -6,17 +6,19 @@ import com.uqdelivery.backend.domain.port.in.CrearEnvioUseCase;
 import com.uqdelivery.backend.infrastructure.security.JwtAuthenticationFilter;
 import com.uqdelivery.backend.infrastructure.security.JwtTokenProvider;
 import com.uqdelivery.backend.infrastructure.security.UserDetailsServiceImpl;
+import com.uqdelivery.backend.infrastructure.config.SecurityConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -34,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         )
 )
 @AutoConfigureMockMvc
+@Import({SecurityConfig.class, JwtAuthenticationFilter.class})
 class EnvioControllerTest {
 
     @Autowired
@@ -41,6 +44,12 @@ class EnvioControllerTest {
 
     @MockitoBean
     private CrearEnvioUseCase crearEnvioUseCase;
+
+    @MockitoBean
+    private UserDetailsServiceImpl userDetailsService;
+
+    @MockitoBean
+    private JwtTokenProvider jwtTokenProvider;
 
     private final String jsonValido = """
             {
@@ -88,7 +97,6 @@ class EnvioControllerTest {
             """;
 
     @Test
-    @WithMockUser(username = "usuario@uqdelivery.com", roles = {"USER"})
     @DisplayName("POST /api/v1/envios con datos válidos y usuario autenticado debe retornar 201 Created")
     void crearEnvio_Valido_Retorna201() throws Exception {
         EnvioResponseDto mockRespuesta = new EnvioResponseDto(
@@ -101,6 +109,7 @@ class EnvioControllerTest {
                 .thenReturn(mockRespuesta);
 
         mockMvc.perform(post("/api/v1/envios")
+                        .with(SecurityMockMvcRequestPostProcessors.user("usuario@uqdelivery.com").roles("USER"))
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonValido))
@@ -111,10 +120,10 @@ class EnvioControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "usuario@uqdelivery.com", roles = {"USER"})
     @DisplayName("POST /api/v1/envios con datos inválidos debe retornar 400 Bad Request")
     void crearEnvio_Invalido_Retorna400() throws Exception {
         mockMvc.perform(post("/api/v1/envios")
+                        .with(SecurityMockMvcRequestPostProcessors.user("usuario@uqdelivery.com").roles("USER"))
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonInvalidoPesoNegativo))
@@ -124,12 +133,14 @@ class EnvioControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/v1/envios sin autenticación debe retornar 401 o 403")
+    @DisplayName("POST /api/v1/envios sin autenticación debe retornar 401 con JSON")
     void crearEnvio_SinAutenticacion_RetornaNoAutorizado() throws Exception {
         mockMvc.perform(post("/api/v1/envios")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonValido))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.status").value(401))
+                .andExpect(jsonPath("$.message").value("Autenticación requerida"));
     }
 }

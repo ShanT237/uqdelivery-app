@@ -8,6 +8,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -19,6 +21,8 @@ import java.util.Map;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     // ─── 400 Bad Request: errores de validación de @Valid ────────────────────
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -61,6 +65,7 @@ public class GlobalExceptionHandler {
     // ─── 500 Internal Server Error: cualquier otra excepción ─────────────────
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGenericErrors(Exception ex) {
+        logger.error("Error interno al procesar la solicitud", ex);
         Map<String, Object> body = buildErrorBody(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Error interno del servidor",
