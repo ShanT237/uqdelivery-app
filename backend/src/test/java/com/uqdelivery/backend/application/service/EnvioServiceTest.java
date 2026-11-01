@@ -8,6 +8,7 @@ import com.uqdelivery.backend.domain.model.Role;
 import com.uqdelivery.backend.domain.model.User;
 import com.uqdelivery.backend.domain.port.out.EnvioRepositoryPort;
 import com.uqdelivery.backend.domain.port.out.UserRepositoryPort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -94,10 +95,17 @@ class EnvioServiceTest {
         when(userRepository.findByEmail("noexiste@example.com")).thenReturn(Optional.empty());
 
         // Act & Assert
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () ->
+        UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () ->
                 envioService.crear(requestValido, "noexiste@example.com")
         );
         assertTrue(exception.getMessage().contains("Usuario no encontrado"));
+        verify(envioRepository, never()).save(any(Envio.class));
+    }
+
+    @Test
+    @DisplayName("Debe rechazar la creación si no se recibe el email autenticado")
+    void crearEnvio_SinEmailAutenticado() {
+        assertThrows(UsernameNotFoundException.class, () -> envioService.crear(requestValido, null));
         verify(envioRepository, never()).save(any(Envio.class));
     }
 }
