@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -39,14 +40,15 @@ public class AuthService implements RegisterUserUseCase, LoginUserUseCase {
 
     @Override
     public AuthResponseDto register(RegisterRequestDto request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalStateException("Ya existe un usuario registrado con el email: " + request.getEmail());
+        String email = normalizeEmail(request.getEmail());
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalStateException("Ya existe un usuario registrado con el email: " + email);
         }
 
         User newUser = new User(
                 UUID.randomUUID(),
                 request.getFullName(),
-                request.getEmail(),
+                email,
                 passwordEncoder.encode(request.getPassword()),
                 Role.USER,
                 LocalDateTime.now()
@@ -62,7 +64,7 @@ public class AuthService implements RegisterUserUseCase, LoginUserUseCase {
 
     @Override
     public AuthResponseDto login(LoginRequestDto request) {
-        User user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(normalizeEmail(request.getEmail()))
                 .orElseThrow(() -> new BadCredentialsException("Credenciales inválidas"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
@@ -71,5 +73,9 @@ public class AuthService implements RegisterUserUseCase, LoginUserUseCase {
 
         String token = jwtTokenProvider.generateToken(user.getEmail(), user.getRole().name());
         return new AuthResponseDto(token, user.getEmail(), user.getFullName(), user.getRole().name());
+    }
+
+    private String normalizeEmail(String email) {
+        return email.trim().toLowerCase(Locale.ROOT);
     }
 }

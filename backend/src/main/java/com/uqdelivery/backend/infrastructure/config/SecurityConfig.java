@@ -1,6 +1,7 @@
 package com.uqdelivery.backend.infrastructure.config;
 
 import com.uqdelivery.backend.infrastructure.security.JwtAuthenticationFilter;
+import com.uqdelivery.backend.infrastructure.security.JsonAuthenticationEntryPoint;
 import com.uqdelivery.backend.infrastructure.security.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,11 +53,18 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/health").permitAll()
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(exceptions ->
+                        exceptions.authenticationEntryPoint(authenticationEntryPoint()))
                 // Proveedor de autenticación
                 .authenticationProvider(authenticationProvider())
                 // Agregar filtro JWT antes del filtro de usuario/contraseña estándar
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    @Bean
+    public JsonAuthenticationEntryPoint authenticationEntryPoint() {
+        return new JsonAuthenticationEntryPoint();
     }
 
     @Bean
